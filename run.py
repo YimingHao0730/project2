@@ -27,21 +27,10 @@ def Prediction_LSTM():
         os.system('python scripts/prediction_lstm.py processed_data/processed_data.txt  results/outcome_LSTM.txt')
     print("Prediction with LSTM model complete")
 
-# Function to predict using the Bert model
-def Prediction_Bert():
-    # Check if the Bert model's result file exists
-    if not os.path.exists("results/outcome_Bert.txt"):
-        # Run the Bert model prediction script
-        os.system('python scripts/prediction_bert.py processed_data/combined.txt  results/outcome_Bert.txt')
-    print("Prediction with Bert model complete")
-
 # Function to integrate results from all models
 def Result_integration():
     # Combine results from all models and generate a final outcome
-    os.system('python scripts/result.py results/outcome_Attention.txt results/outcome_LSTM.txt results/outcome_Bert.txt processed_data/combined.txt results/combined_outcome.csv')
-    # Process the final results
-    os.system('python scripts/final_results.py')
-    print('result integration complete')
+    os.system('python scripts/result.py results/outcome_Attention.txt results/outcome_LSTM.txt processed_data/combined.txt results/combined_outcome.csv')
 
 # Main execution point of the script
 if __name__ == "__main__":
@@ -62,14 +51,12 @@ if __name__ == "__main__":
         else:
             Prediction_Attention()
             Prediction_LSTM()
-            Prediction_Bert()
             Result_integration()
     elif argument == "all":
         # Run all steps: data processing, prediction, and result integration
         data_processing()
         Prediction_Attention()
         Prediction_LSTM()
-        Prediction_Bert()
         Result_integration()
     else:
         print("Invalid argument. Please choose 'data', 'prediction', 'all' or 'clean'.")
