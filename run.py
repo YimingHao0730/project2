@@ -6,7 +6,7 @@ def data_processing():
     # Check if the processed data file exists
     if not os.path.exists('processed_data/processed.txt'):
         # Preprocess the data into txt
-        os.system('python preprocess.py input.fastq output.txt')
+        os.system('python scripts/preprocess.py input.fastq output.txt')
         # Format the combined data
         os.system('perl scripts/format.pl processed_data/output.txt none > processed_data/processed_data.txt')
     print("Data processing done")
