@@ -34,8 +34,11 @@ def get_subset_translations(n = 100000):
                                         results.append(t)
         return results
 
-results_100k = get_subset_translations()
-print(f'length of results_100k: {len(results_100k)}')
+results_1k = get_subset_translations(1000)
+#print(f'length of results_100k: {len(results_100k)}')
+with open('results_1k.txt', 'w') as file:
+	file.write('\n'.join(results_1k))
+
 
 #Gets all the 6 frame translations from all the DNA sequences in the fast_q_data file
 #Returns them in a list.
@@ -51,3 +54,7 @@ def gets_all_translations():
                                 if len(t)>=smallest_AA_size:
                                         all_results.append(t)
         return all_results
+
+all_results = gets_all_translations()
+with open('all_results.txt', 'w') as file:
+        file.write('\n'.join(all_results))
