@@ -1,9 +1,15 @@
 import sys
 import os
 
+# get orf
+
+def getOrf():
+    os.system('python scripts/getorf.py')
+
 # Function for processing the data
 
 def trimming():
+    getOrf()
     # Trim the input file
     os.system('python scripts/trim.py Data/input.fa Data/input2.fa')
     # Preprocess the data into txt
@@ -12,6 +18,7 @@ def trimming():
     os.system('perl scripts/format.pl Data/input2.fa none > processed_data/processed_data.txt')
     print("Data processing done")
 def data_processing():
+    getOrf()
     # Preprocess the data into txt
     os.system('perl scripts/format1.pl --input Data/input.fa')
     # Format the combined data
