@@ -15,6 +15,10 @@ with open(in_file, "r") as file:
         fasta_name = f"{fastq_name.replace('.fastq.gz', '')}.fasta"
         
         decompressed_file = fastq_name.replace('.gz', '')
+        
+        if os.path.exists(os.path.join("Data", fasta_name)):
+            print('getorf already done')
+            continue
 
         # Decompress the FASTQ file
         decompression_cmd = f"gzip -d fasta_sequence_path/{fastq_name}"
@@ -43,7 +47,7 @@ with open(in_file, "r") as file:
         # print(cmd)
 
 # Concatenate all the .fasta files into one file called input.fa
-output_dir = "../Data"
+output_dir = "Data"
 input_fa_path = os.path.join(output_dir, "input.fa")
 
 cat_cmd = f"cat {output_dir}/*.fasta > {input_fa_path}"
