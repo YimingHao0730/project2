@@ -8,6 +8,7 @@ parser.add_argument('output_file', type=str, help='Output FASTA file path')
 # Parse arguments
 args = parser.parse_args()
 
+print('trim start')
 count = 0
 with open(args.input_file, 'r') as infile, open(args.output_file, 'w') as outfile:
     for line in infile:
@@ -16,3 +17,5 @@ with open(args.input_file, 'r') as infile, open(args.output_file, 'w') as outfil
             if count > 1000000:
                 break
         outfile.write(line)
+print('trim end')
+

@@ -5,7 +5,6 @@ import os
 
 def getOrf():
     os.system('python scripts/getorf.py')
-    print('get orf complete')
 
 # Function for processing the data
 
@@ -13,7 +12,6 @@ def trimming():
     getOrf()
     # Trim the input file
     os.system('python scripts/trim.py Data/input.fa Data/input2.fa')
-    print('trim complete')
     # Preprocess the data into txt
     os.system('perl scripts/format1.pl --input Data/input2.fa')
     print('format1 complete')

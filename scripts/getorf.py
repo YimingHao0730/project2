@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+print('start getOrf')
 # Input file containing the names of the FASTQ files
 in_file = "fasta_sequence_names.txt"
 
@@ -18,10 +19,14 @@ with open(in_file, "r") as file:
         # Decompress the FASTQ file
         decompression_cmd = f"gzip -d fasta_sequence_path/{fastq_name}"
         subprocess.run(decompression_cmd, shell=True)
+        
+        print('decompress completed')
 
         # Convert FASTQ to FASTA using EMBOSS
         conversion_cmd = f"seqret -sequence fasta_sequence_path/{decompressed_file} -outseq fasta_sequence_path/{fasta_name}"
         subprocess.run(conversion_cmd, shell=True)
+        
+        print('conversion completed')
 
         # Construct the command to run getorf
         cmd = (
@@ -29,9 +34,11 @@ with open(in_file, "r") as file:
             f"-find 0 -table 11 -minsize 15 -maxsize 150 "
             f"-outseq Data/{fasta_name}"
         )
+        
 
         # Execute the command
         subprocess.run(cmd, shell=True)
+        print('getorf completed')
         # Uncomment the line below to print the command instead of executing
         # print(cmd)
 
@@ -41,4 +48,5 @@ input_fa_path = os.path.join(output_dir, "input.fa")
 
 cat_cmd = f"cat {output_dir}/*.fasta > {input_fa_path}"
 subprocess.run(cat_cmd, shell=True)
+print('cat completed')
 
