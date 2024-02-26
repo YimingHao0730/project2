@@ -1,15 +1,10 @@
 import sys
 import os
 
-# get orf
-
-def getOrf():
-    os.system('python scripts/getorf.py')
-
 # Function for processing the data
 
 def trimming():
-    getOrf()
+    os.system('python scripts/getorf.py')
     # Trim the input file
     os.system('python scripts/trim.py Data/input.fa Data/input2.fa')
     # Preprocess the data into txt
@@ -19,7 +14,7 @@ def trimming():
     os.system('perl scripts/format.pl Data/input2.fa none > processed_data/processed_data.txt')
     print("Data processing done")
 def data_processing():
-    getOrf()
+    os.system('python scripts/getorf.py')
     # Preprocess the data into txt
     os.system('perl scripts/format1.pl --input Data/input.fa')
     print('format1 complete')
@@ -50,5 +45,5 @@ if __name__ == "__main__":
         trimming()
         Prediction_Attention()
     else:
-        print("Invalid argument. Please choose 'data', 'prediction', 'all' or 'clean'.")
+        print("Invalid argument. Please choose 'trimmed' or 'full'.")
 
