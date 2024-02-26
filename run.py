@@ -1,43 +1,40 @@
 import sys
 import os
+from datetime import datetime
+
+# Function to get current time as a string
+def current_time():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 # Function for processing the data
-
 def trimming():
     os.system('python scripts/getorf.py')
-    # Trim the input file
     os.system('python scripts/trim.py Data/input.fa Data/input2.fa')
-    # Preprocess the data into txt
     os.system('perl scripts/format1.pl --input Data/input2.fa')
-    print('format1 complete')
-    # Format the combined data
+    print(f'{current_time()} - format1 complete')
     os.system('perl scripts/format.pl Data/input2.fa none > processed_data/processed_data.txt')
-    print("Data processing done")
+    print(f"{current_time()} - Data processing done")
+
 def data_processing():
     os.system('python scripts/getorf.py')
-    # Preprocess the data into txt
     os.system('perl scripts/format1.pl --input Data/input.fa')
-    print('format1 complete')
-    # Format the combined data
+    print(f'{current_time()} - format1 complete')
     os.system('perl scripts/format.pl Data/input.fa none > processed_data/processed_data.txt')
-    print("Data processing done")
+    print(f"{current_time()} - Data processing done")
 
 # Function to predict using the Attention model
 def Prediction_Attention():
     os.system('python scripts/prediction_attention.py processed_data/processed_data.txt  results/outcome_Attention.txt')
-    print("Prediction with Attention model complete")
-
+    print(f"{current_time()} - Prediction with Attention model complete")
 
 # Main execution point of the script
 if __name__ == "__main__":
-    # Check if the correct number of arguments is passed
     if len(sys.argv) != 2:
-        print("Usage: python run.py [full/trimmed]")
+        print(f"{current_time()} - Usage: python run.py [full/trimmed]")
         sys.exit(1)
 
     argument = sys.argv[1]
 
-    # Process based on the argument
     if argument == "full":
         data_processing()
         Prediction_Attention()
@@ -45,5 +42,6 @@ if __name__ == "__main__":
         trimming()
         Prediction_Attention()
     else:
-        print("Invalid argument. Please choose 'trimmed' or 'full'.")
+        print(f"{current_time()} - Invalid argument. Please choose 'trimmed' or 'full'.")
+
 
