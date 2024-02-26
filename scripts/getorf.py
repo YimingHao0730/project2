@@ -11,7 +11,7 @@ with open(in_file, "r") as file:
         fastq_name = line.strip()
 
         # Construct the output file name
-        fasta_name = f"{fastq_name.split('.')[0]}.fasta"
+        fasta_name = f"{fastq_name.replace('.fastq.gz', '')}.fasta"
         
         decompressed_file = fastq_name.replace('.gz', '')
 
@@ -25,9 +25,9 @@ with open(in_file, "r") as file:
 
         # Construct the command to run getorf
         cmd = (
-            f"getorf -sequence ../fasta_sequence_path/{fasta_name} "
+            f"getorf -sequence fasta_sequence_path/{fasta_name} "
             f"-find 0 -table 11 -minsize 15 -maxsize 150 "
-            f"-outseq ../Data/{fasta_name}"
+            f"-outseq Data/{fasta_name}"
         )
 
         # Execute the command
