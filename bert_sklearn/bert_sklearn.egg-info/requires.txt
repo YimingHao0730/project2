@@ -1,9 +1,0 @@
-torch>=0.4.1
-scikit-learn
-numpy
-pandas
-boto3
-requests
-regex
-pytorch_pretrained_bert==0.6.1
-tqdm

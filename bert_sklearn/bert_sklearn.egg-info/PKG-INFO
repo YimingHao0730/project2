@@ -1,5 +1,0 @@
-Metadata-Version: 2.1
-Name: bert-sklearn
-Version: 0.2.0
-Summary: A sklearn wrapper for Bert
-Requires-Python: >=3.5.0
