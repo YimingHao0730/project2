@@ -10,16 +10,12 @@ def current_time():
 def trimming():
     os.system('python scripts/getorf.py')
     os.system('python scripts/trim.py Data/input.fa Data/input2.fa')
-    os.system('perl scripts/format1.pl --input Data/input2.fa')
-    print(f'{current_time()} - format1 complete')
-    os.system('perl scripts/format.pl Data/input2.fa none > processed_data/processed_data.txt')
+    os.system('perl scripts/format.py Data/input2.fa processed_data/processed_data.txt')
     print(f"{current_time()} - Data processing done")
 
 def data_processing():
     os.system('python scripts/getorf.py')
-    os.system('perl scripts/format1.pl --input Data/input.fa')
-    print(f'{current_time()} - format1 complete')
-    os.system('perl scripts/format.pl Data/input.fa none > processed_data/processed_data.txt')
+    os.system('perl scripts/format.py Data/input.fa processed_data/processed_data.txt')
     print(f"{current_time()} - Data processing done")
 
 # Function to predict using the Attention model
@@ -30,18 +26,19 @@ def Prediction_Attention():
 # Main execution point of the script
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(f"{current_time()} - Usage: python run.py [full/trimmed]")
+        print(f"{current_time()} - Usage: python run.py [pre-process/prediction/trimming]")
         sys.exit(1)
 
     argument = sys.argv[1]
-
-    if argument == "full":
+    if argument == "pre-process":
         data_processing()
-        Prediction_Attention()
     elif argument == "trimmed":
         trimming()
+        data_processing()
+        Prediction_Attention()
+    elif argument == "prediction":
         Prediction_Attention()
     else:
-        print(f"{current_time()} - Invalid argument. Please choose 'trimmed' or 'full'.")
+        print(f"{current_time()} - Invalid argument. Please choose 'pre-process' or 'prediction' or 'trimming'.")
 
 
