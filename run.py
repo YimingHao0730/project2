@@ -35,7 +35,6 @@ if __name__ == "__main__":
     elif argument == "trimmed":
         trimming()
         data_processing()
-        Prediction_Attention()
     elif argument == "prediction":
         Prediction_Attention()
     else:

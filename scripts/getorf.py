@@ -11,16 +11,14 @@ in_file = "fasta_sequence_names.txt"
 
 with open(in_file, "r") as file:
     for line in file:
-        fastq_name = line.strip()
-        fasta_name = f"{fastq_name.replace('.fastq.gz', '')}.fasta"
-        decompressed_file = fastq_name.replace('.gz', '')
-
         if os.path.exists(os.path.join("Data", fasta_name)):
-            print(f'{current_time()} - getorf already done')
-            continue
-
-        decompression_cmd = f"gzip -d fasta_sequence_path/{fastq_name}"
-        subprocess.run(decompression_cmd, shell=True)
+            print(f'{current_time()} - compression already done')
+        else:
+            fastq_name = line.strip()
+            fasta_name = f"{fastq_name.replace('.fastq.gz', '')}.fasta"
+            decompressed_file = fastq_name.replace('.gz', '')
+            decompression_cmd = f"gzip -d fasta_sequence_path/{fastq_name}"
+            subprocess.run(decompression_cmd, shell=True)
         
         print(f'{current_time()} - decompress completed')
 
