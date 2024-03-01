@@ -26,7 +26,7 @@ def Prediction_Attention():
 # Main execution point of the script
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(f"{current_time()} - Usage: python run.py [pre-process/prediction/trimming]")
+        print(f"{current_time()} - Usage: python run.py [pre-process/prediction/trimmed]")
         sys.exit(1)
 
     argument = sys.argv[1]
@@ -37,6 +37,6 @@ if __name__ == "__main__":
     elif argument == "prediction":
         Prediction_Attention()
     else:
-        print(f"{current_time()} - Invalid argument. Please choose 'pre-process' or 'prediction' or 'trimming'.")
+        print(f"{current_time()} - Invalid argument. Please choose 'pre-process' or 'prediction' or 'trimmed'.")
 
 

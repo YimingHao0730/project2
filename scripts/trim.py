@@ -14,7 +14,7 @@ with open(args.input_file, 'r') as infile, open(args.output_file, 'w') as outfil
     for line in infile:
         if line.startswith('>'):
             count += 1
-            if count > 10000000:
+            if count > 10000:
                 break
         outfile.write(line)
 print('trim end')
