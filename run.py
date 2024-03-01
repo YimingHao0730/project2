@@ -10,12 +10,12 @@ def current_time():
 def trimming():
     os.system('python scripts/getorf.py')
     os.system('python scripts/trim.py Data/input.fa Data/input2.fa')
-    os.system('perl scripts/format.py Data/input2.fa processed_data/processed_data.txt')
+    os.system('python scripts/format.py Data/input2.fa processed_data/processed_data.txt')
     print(f"{current_time()} - Data processing done")
 
 def data_processing():
     os.system('python scripts/getorf.py')
-    os.system('perl scripts/format.py Data/input.fa processed_data/processed_data.txt')
+    os.system('python scripts/format.py Data/input.fa processed_data/processed_data.txt')
     print(f"{current_time()} - Data processing done")
 
 # Function to predict using the Attention model
@@ -34,7 +34,6 @@ if __name__ == "__main__":
         data_processing()
     elif argument == "trimmed":
         trimming()
-        data_processing()
     elif argument == "prediction":
         Prediction_Attention()
     else:
