@@ -22,7 +22,7 @@ def data_processing():
 # Function to predict using the Attention model
 def Prediction_Attention():
     print(f"{current_time()} - start spliting")
-    os.system('split -l $((`wc -l < processed_data/processed_data.txt`/10)) processed_data.txt chunk/output_')
+    os.system('split -l $((`wc -l < processed_data/processed_data.txt`/10)) processed_data/processed_data.txt chunk/output_')
     print(f"{current_time()} - spliting done")
 
     # Loop through each letter from 'aa' to 'aj'
