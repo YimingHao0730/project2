@@ -30,20 +30,19 @@ def Prediction_Attention():
         for letter2 in string.ascii_lowercase[:10]:  # Loop through the first 10 letters of the alphabet
             input_filename = f"chunk/output_{letter1}{letter2}"
             output_filename = f"chunk/processed_data_{letter1}{letter2}"
-            end_filename = f"processed_data/predicted_{letter1}{letter2}"
+            print(f"{current_time()} - start {input_filename}")
             command = f"python scripts/prediction_attention.py {input_filename} {output_filename}"
             os.system(command)
-            print(f"{current_time()} - start {input_filename}")
-            command_end = f"python scripts/chunk.py {input_filename} {output_filename} {end_filename}"
-            os.system(command_end)
             print(f"{current_time()} - end {input_filename}")
-           
+            
+        
     print(f"{current_time()} - cat start") 
-    
-    os.system("cat processed_data/predicted_aa processed_data/predicted_ab processed_data/predicted_ac processed_data/predicted_ad processed_data/predicted_ae processed_data/predicted_af processed_data/predicted_ag processed_data/predicted_ah processed_data/predicted_ai processed_data/predicted_aj > results/results.txt")
-    
+    os.system("cat chunk/processed_data_aa chunk/processed_data_ab chunk/processed_data_ac chunk/processed_data_ad chunk/processed_data_ae chunk/processed_data_af chunk/processed_data_ag chunk/processed_data_ah chunk/processed_data_ai chunk/processed_data_aj > results/probs.txt")
     print(f"{current_time()} - cat end")
 
+    print(f"{current_time()} - result start") 
+    os.system("python Data/input.fa results/probs.txt results/preds")
+    print(f"{current_time()} - result end")
 # Main execution point of the script
 if __name__ == "__main__":
     if len(sys.argv) != 2:
