@@ -1,27 +1,21 @@
-# -*- coding:utf-8 -*-
-# modified from https://github.com/mayuefine/c_AMPs-prediction/tree/master
-
-## usage python prediction_attention.py bact.txt att_bact.txt
-import tensorflow as tf
-
+import pandas as pd
 from keras.models import load_model
-from numpy import loadtxt, savetxt
+import tensorflow as tf
 from Attention import Attention_layer
 from sys import argv
 
-# Setting the device to GPU if available
-device_name = tf.test.gpu_device_name()
-if device_name:
-    print('Found GPU at: {}'.format(device_name))
-else:
-    print("GPU device not found, using CPU instead.")
-
+# Load the model
 model = load_model('Models/att.h5', custom_objects={'Attention_layer': Attention_layer})
-x = loadtxt(argv[1], delimiter=",", encoding='utf-8')
 
-# Use the GPU for prediction
+# Use pandas to read the CSV file. Adjust the dtype if you know the exact data types to save memory.
+x = pd.read_csv(argv[1], delimiter=",", encoding='utf-8', dtype='float32')
+
+# Predictions
 with tf.device('/GPU:0'):
-    preds = model.predict(x)
+    preds = model.predict(x.values)
 
-savetxt(argv[2], preds, fmt="%.8f", delimiter=",")
+# Save predictions to CSV. Adjust path as necessary.
+preds_df = pd.DataFrame(preds)
+preds_df.to_csv(argv[2].replace('\xa0', ''), index=False, float_format="%.8f")
+
 
