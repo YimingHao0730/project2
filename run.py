@@ -41,7 +41,7 @@ def Prediction_Attention():
     print(f"{current_time()} - cat end")
 
     print(f"{current_time()} - result start") 
-    os.system("python Data/input.fa results/probs.txt results/preds")
+    os.system("python scripts/chunk.py Data/input.fa results/probs.txt results/preds.txt")
     print(f"{current_time()} - result end")
 # Main execution point of the script
 if __name__ == "__main__":

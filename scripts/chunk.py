@@ -8,11 +8,19 @@ if len(sys.argv) != 4:
 # Assign command-line arguments to variables
 sequences_file_path = sys.argv[1]
 floats_file_path = sys.argv[2]
-output_file_path = sys.argv[3]  # The output file path is now provided as an argument
+output_file_path = sys.argv[3]
 
 # Process files and write to the specified output file
 with open(sequences_file_path, 'r') as sequences_file, open(floats_file_path, 'r') as floats_file, open(output_file_path, 'w') as output_file:
-    for sequence_line, float_line in zip(sequences_file, floats_file):
+    while True:
+        metadata_line = sequences_file.readline()  # Read metadata line but don't use it
+        sequence_line = sequences_file.readline()  # Read sequence line
+        float_line = floats_file.readline()  # Read float line
+
+        if not sequence_line or not float_line:  # Break the loop if either file ends
+            break
+
         if float(float_line.strip()) > 0.999999:
-            output_file.write(sequence_line)
+            output_file.write(sequence_line)  # Write only sequence line
+
 
