@@ -1,60 +1,91 @@
-# AMPs-prediction
 
-__Identification of antimicrobial peptides from the human gut microbiome using deep learning__
+# Barnacle2 Workflow
 
-Welcome to our project focused on identifying Antimicrobial Peptides (AMPs) from the human gut microbiome using state-of-the-art deep learning techniques. In the wake of increasing antibiotic resistance, our aim is to accelerate the discovery of new AMP candidates by applying an ensemble of advanced NLP models — LSTM, BERT, and Attention —, and also its combinations to analyze metagenomic and metaproteomic data. This approach represents a significant advancement over traditional methods, enabling us to explore a high-dimensional space of peptide sequences and uncover potential AMPs that were previously undetectable. Our dataset comprises both known AMPs and non-AMPs.[Dataset](https://github.com/mayuefine/c_AMPs-prediction/tree/master/Data), providing a robust foundation for training our models. Join us in this innovative venture to develop more effective strategies against antibiotic-resistant pathogens.
+## Setting up conda environment:
 
-# DSMLP Workflow
+(1) After signing in to Barnacle2, run these commands:
+```bash
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+~/miniconda3/bin/conda init bash
+source ~/.bashrc
+```
 
-## Retrieving the Bert Model locally:
+(2)
+run
+```bash
+vi ~/.bash_profile
+```
+then press i to enter insert mode, and paste the following code
+```bash
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+```
+hit esc, type":wq" to save and exit file
 
-(1) download the Bert Model from https://www.dropbox.com/sh/o58xdznyi6ulyc6/AABLckEnxP54j2X7BrGybhyea?dl=0\
+(3) finally, run
+```bash
+source ~/.bash_profile
+```
 
-(2) put bert.bin in the __Models__ folder
+## Input file
+
+(1) This workflow is designed to process one file at a time, once you decided which file you want to use as input, move it to _~\project2\fasta_sequence_path_, __for example__:
+```bash
+cp '/qmounts/qiita_data/per_sample_FASTQ/121153/SAMN08010247.SRR6323500.R2.ebi.fastq.gz' /home/y7hao/project2/fasta_sequence_path/
+```
+replace the file name with your desired file and the path with your project2 folder path
+
+(2) run
+```bash
+vi fasta_sequence_names.txt
+```
+press i and enter the input file name, for example, "SAMN08010247.SRR6323500.R2.ebi.fastq.gz"
+
+press esc and type ":wq" to save and exit file
+
 
 ## Running the project
 
 ### Initlize environment
-The required python version is 3.9, so please make sure you have __python3.9__ before proceeding.
 
 To create the environment, run the following command from the `root directory of the project`.
 ```bash
-python -m venv amp_prediction
-source amp_prediction/bin/activate
+conda -m venv capstone python==3.8
+conda activate capstone
 ```
-
-Right now you should have a folder called __amp_prediction__ in your root directory of the project
 
 ### Installation of dependencies
 To install dependencies, run the following command from the same terminal
 ```bash
-pip install -r requirements.txt
-```
-### Installation bert_sklearn
-
-copy the __bert_sklearn__ folder to __amp_prediction/lib/python3.9/site-packages__ folder, and then run the following command from the same terminal
-```bash
-cd amp_prediction/lib/python3.9/site-packages/bert_sklearn
-pip install .
-cd ../../../..
+conda install -r requirements.txt
 ```
 
 ### Building the project stages using `run.py`
 
-* To process the data, from the same terminal, run `python run.py data`
-  - This combines the amp and non-amp data and saves the processed data in processed_data folder.
-* To do prediction and evaluate the performance of the models, from the project root dir, run `python run.py prediction`
-  - This loads the processed data into three individual models (Attention, LSTM and Bert) and completes the prediction. Save the results and integrates them, and outputs the model's performance statistic as a html page in the project root dir.
-* Use `python run.py all` to complete all steps above
-
-*The result will be exported into a html file in the __root directory of the project__
-
-* This step takes `10-15` minutes
-
-* Whenever you want to open a __new terminal__ and run the project, make sure to activate the environment by running the follow command from __root directory of the project__:
+* To gain access to gpu, run this command
 ```bash
-source amp_prediction/bin/activate
+srun --mem 100g -N 1 -c 1 --partition gpu --gres=gpu:1 --time 5:00:00 --pty bash -l
 ```
+
+* To process the data, from the root directory of the project, run `python run.py pre-process`
+  - This unzip the gz file, convert it into fasta, and does six-frame-translation and get the orfs, and translate into attention model-ready format.
+
+  - please make sure that you are on `base` environment for pre-processing
+* To do prediction and extract the predicted AMPs, from the project root dir, run `python run.py prediction`
+  - This divides the input file into 10 files, and run them separately through the model, it outputs a file which contains all the sequences that has been predicted AMPs.
+  
+  - Please make sure that you are on `capstone` environment for prediction
+
+*The result will be exported into a txt file in the results folder of the __root directory of the project__
+
+* pre-process takes about `30` minutes
+
+* prediction takes about `120` minutes
+
 ## Reference
 
-Models, bert-sklearn and part of the scripts are provided by [Identification of antimicrobial peptides from the human gut microbiome using deep learning](https://www.nature.com/articles/s41587-022-01226-0)
+Models and part of the scripts are provided by [Identification of antimicrobial peptides from the human gut microbiome using deep learning](https://www.nature.com/articles/s41587-022-01226-0)
