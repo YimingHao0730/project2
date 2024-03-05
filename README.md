@@ -74,7 +74,7 @@ srun --mem 100g -N 1 -c 1 --partition gpu --gres=gpu:1 --time 5:00:00 --pty bash
 ```
 
 * To process the data, from the root directory of the project, run `python run.py pre-process`
-  - This unzip the gz file, convert it into fasta, and does six-frame-translation and get the orfs, and translate into attention model-ready format.
+  - This script unzips the gz file, converts it to a fasta format, does six-frame-translation and gets the orfs, and get the data into Attention model-ready format.
 
   - please make sure that you are on `base` environment for pre-processing
 * To do prediction and extract the predicted AMPs, from the project root dir, run `python run.py prediction`
