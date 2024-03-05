@@ -2,7 +2,7 @@
 # Barnacle2 Workflow
 
 ## Setting up conda environment:
-## Only required if you do not have a conda environment set up already.
+### Only required if you do not have a conda environment set up already.
 
 (1) After signing in to Barnacle2, run these commands:
 ```bash
@@ -31,7 +31,7 @@ hit esc, type":wq" to save and exit file
 ```bash
 source ~/.bash_profile
 ```
-## Now you have a working conda environment on barnacle2.
+### Now you have a working conda environment on barnacle2.
 
 ## Input file
 
