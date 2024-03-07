@@ -23,11 +23,15 @@ def combine_files(file_pair):
         subprocess.run(command, shell=True, check=True)
 
 if __name__ == "__main__":
+    # Adjust here to limit to the first 3 pairs of files (6 files in total)
+    limited_files = files[:6]  # Limit the files list to the first 6 files
+
     # Create a multiprocessing Pool with the number of available CPU cores
-    num_processes = min(cpu_count(), len(files))
+    num_processes = min(cpu_count(), len(limited_files) // 2)
     with Pool(num_processes) as pool:
-        # Map the combine_files function to each file pair in parallel
-        list(tqdm(pool.imap_unordered(combine_files, zip(files[::2], files[1::2])), total=len(files)//2, desc="Combining files", unit=" pair"))
+        # Map the combine_files function to each file pair in parallel, but only for the limited set of files
+        list(tqdm(pool.imap_unordered(combine_files, zip(limited_files[::2], limited_files[1::2])), total=len(limited_files)//2, desc="Combining files", unit=" pair"))
 
     print("Combining files completed.")
+
 
