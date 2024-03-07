@@ -24,7 +24,7 @@ def combine_files(file_pair):
 
 if __name__ == "__main__":
     # Adjust here to limit to the first 3 pairs of files (6 files in total)
-    limited_files = files[:6]  # Limit the files list to the first 6 files
+    limited_files = files[:4]  # Limit the files list to the first 6 files
 
     # Create a multiprocessing Pool with the number of available CPU cores
     num_processes = min(cpu_count(), len(limited_files) // 2)
