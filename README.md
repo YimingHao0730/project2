@@ -2,6 +2,7 @@
 # Barnacle2 Workflow
 
 ## Setting up conda environment:
+### Only required if you do not have a conda environment set up already.
 
 (1) After signing in to Barnacle2, run these commands:
 ```bash
@@ -30,6 +31,7 @@ hit esc, type":wq" to save and exit file
 ```bash
 source ~/.bash_profile
 ```
+### Now you have a working conda environment on barnacle2.
 
 ## Input file
 
@@ -37,7 +39,7 @@ source ~/.bash_profile
 ```bash
 cp '/qmounts/qiita_data/per_sample_FASTQ/121153/SAMN08010247.SRR6323500.R2.ebi.fastq.gz' /home/y7hao/project2/fasta_sequence_path/
 ```
-replace the file name with your desired file and the path with your project2 folder path
+replace the file name with your desired file and the path with your project2 folder path.
 
 (2) run
 ```bash
@@ -61,8 +63,9 @@ conda activate capstone
 ### Installation of dependencies
 To install dependencies, run the following command from the same terminal
 ```bash
-conda install -r requirements.txt
+pip install -r requirements.txt
 ```
+(Have to use conda to install cudatoolkit and cudnn)
 
 ### Building the project stages using `run.py`
 
@@ -72,7 +75,7 @@ srun --mem 100g -N 1 -c 1 --partition gpu --gres=gpu:1 --time 5:00:00 --pty bash
 ```
 
 * To process the data, from the root directory of the project, run `python run.py pre-process`
-  - This unzip the gz file, convert it into fasta, and does six-frame-translation and get the orfs, and translate into attention model-ready format.
+  - This script unzips the gz file, converts it to a fasta format, does six-frame-translation and gets the orfs, and get the data into Attention model-ready format.
 
   - please make sure that you are on `base` environment for pre-processing
 * To do prediction and extract the predicted AMPs, from the project root dir, run `python run.py prediction`
