@@ -63,7 +63,7 @@ conda activate capstone
 ### Installation of dependencies
 To install dependencies, run the following command from the same terminal
 ```bash
-conda install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Building the project stages using `run.py`
