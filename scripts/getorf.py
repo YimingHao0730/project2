@@ -38,7 +38,7 @@ if __name__ == "__main__":
     files = os.listdir(fasta_sequence_path)
 
     # Create a multiprocessing Pool with the number of available CPU cores
-    num_processes = 4
+    num_processes = min(cpu_count(), len(files))
     with Pool(num_processes) as pool:
         # Map the processing function to each file in parallel
         list(tqdm(pool.imap_unordered(process_file, files), total=len(files), desc="Processing files", unit=" file"))
