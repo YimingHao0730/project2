@@ -1,8 +1,10 @@
 import os
 import time
 from tqdm import tqdm
+from multiprocessing import Pool, cpu_count
 
-def translate_sequence(in_file, out_file):
+def translate_sequence(file_tuple):
+    in_file, out_file = file_tuple
     aacode = {
         'A': "1", 'C': "2", 'D': "3", 'E': "4",
         'F': "5", 'G': "6", 'H': "7", 'I': "8",
@@ -12,7 +14,7 @@ def translate_sequence(in_file, out_file):
     }
 
     with open(in_file, 'r') as infile, open(out_file, 'w') as outfile:
-        for line in tqdm(infile, desc="Translating", unit=" line"):
+        for line in infile:
             line = line.strip().upper()
             if line.startswith('>'):
                 continue  # Skip further processing for header lines
@@ -32,13 +34,15 @@ if __name__ == "__main__":
     input_dir = "Data"
     output_dir = "processed_data"
 
-    # Iterate over every file in the Data directory
-    for filename in os.listdir(input_dir):
-        if filename.endswith(".fasta"):
-            in_file = os.path.join(input_dir, filename)
-            out_file = os.path.join(output_dir, filename.replace(".fasta", ".txt"))
-            translate_sequence(in_file, out_file)
+    files = [(os.path.join(input_dir, filename), os.path.join(output_dir, filename.replace(".fasta", ".txt"))) 
+             for filename in os.listdir(input_dir) if filename.endswith(".fasta")]
+
+    # Create a multiprocessing Pool with the number of available CPU cores
+    num_processes = min(cpu_count(), len(files))
+    with Pool(num_processes) as pool:
+        list(tqdm(pool.imap_unordered(translate_sequence, files), total=len(files), desc="Processing files", unit=" file"))
 
     end_time = time.time()  # End time
     print(f"Done. Execution time: {end_time - start_time:.2f} seconds.")
+
 
