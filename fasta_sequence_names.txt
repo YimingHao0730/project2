@@ -1,1 +1,1 @@
-SAMN08010247.SRR6323500.R2.ebi.fastq.gz
+17-A1_S369_L001_R1_001.trimmed.fastq.gz
