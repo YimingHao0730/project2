@@ -1,4 +1,4 @@
-import sys
+import os
 import time
 
 def translate_sequence(in_file, out_file):
@@ -28,10 +28,15 @@ def translate_sequence(in_file, out_file):
 if __name__ == "__main__":
     start_time = time.time()  # Start time
 
-    # Example usage: python script.py input.txt output.txt
-    in_file = sys.argv[1]
-    out_file = sys.argv[2]
-    translate_sequence(in_file, out_file)
+    input_dir = "Data"
+    output_dir = "processed_data"
+
+    # Iterate over every file in the Data directory
+    for filename in os.listdir(input_dir):
+        if filename.endswith(".fasta"):
+            in_file = os.path.join(input_dir, filename)
+            out_file = os.path.join(output_dir, filename)
+            translate_sequence(in_file, out_file)
 
     end_time = time.time()  # End time
     print(f"Done. Execution time: {end_time - start_time:.2f} seconds.")

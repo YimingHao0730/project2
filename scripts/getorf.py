@@ -7,37 +7,32 @@ def current_time():
 
 print(f'{current_time()} - start getOrf')
 
-in_file = "fasta_sequence_names.txt"
+fasta_sequence_path = "fasta_sequence_path"
+output_dir = "Data"
 
-with open(in_file, "r") as file:
-    for line in file:
-        
-        fastq_name = line.strip()
+# Iterate over every file in the fasta_sequence_path folder
+for filename in os.listdir(fasta_sequence_path):
+    if filename.endswith(".fastq.gz"):
+        fastq_name = filename
         fasta_name = f"{fastq_name.replace('.fastq.gz', '')}.fasta"
         decompressed_file = fastq_name.replace('.gz', '')
-        decompression_cmd = f"gzip -d fasta_sequence_path/{fastq_name}"
+        
+        decompression_cmd = f"gzip -d {os.path.join(fasta_sequence_path, fastq_name)}"
         subprocess.run(decompression_cmd, shell=True)
-        
-        print(f'{current_time()} - decompress completed')
+        print(f'{current_time()} - Decompression completed for {fastq_name}')
 
-        conversion_cmd = f"seqret -sequence fasta_sequence_path/{decompressed_file} -outseq fasta_sequence_path/{fasta_name}"
+        conversion_cmd = f"seqret -sequence {os.path.join(fasta_sequence_path, decompressed_file)} -outseq {os.path.join(fasta_sequence_path, fasta_name)}"
         subprocess.run(conversion_cmd, shell=True)
-        
-        print(f'{current_time()} - conversion completed')
+        print(f'{current_time()} - Conversion completed for {decompressed_file}')
 
         cmd = (
-            f"getorf -sequence fasta_sequence_path/{fasta_name} "
+            f"getorf -sequence {os.path.join(fasta_sequence_path, fasta_name)} "
             f"-find 0 -table 11 -minsize 15 -maxsize 150 "
-            f"-outseq Data/{fasta_name}"
+            f"-outseq {os.path.join(output_dir, fasta_name)}"
         )
         
         subprocess.run(cmd, shell=True)
-        print(f'{current_time()} - getorf completed')
-
-output_dir = "Data"
-input_fa_path = os.path.join(output_dir, "input.fa")
-
-cat_cmd = f"cat {output_dir}/*.fasta > {input_fa_path}"
-subprocess.run(cat_cmd, shell=True)
-print(f'{current_time()} - cat completed')
+        print(f'{current_time()} - Getorf completed for {fasta_name}')
+        
+print(f'{current_time()} - getOrf completed')
 

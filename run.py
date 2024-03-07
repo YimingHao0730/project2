@@ -7,16 +7,10 @@ import string
 def current_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-# Function for processing the data
-def trimming():
-    os.system('python scripts/getorf.py')
-    os.system('python scripts/trim.py Data/input.fa Data/input2.fa')
-    os.system('python scripts/format.py Data/input2.fa processed_data/processed_data.txt')
-    print(f"{current_time()} - Data processing done")
 
 def data_processing():
     os.system('python scripts/getorf.py')
-    os.system('python scripts/format.py Data/input.fa processed_data/processed_data.txt')
+    os.system('python scripts/format.py')
     print(f"{current_time()} - Data processing done")
 
 # Function to predict using the Attention model
@@ -52,8 +46,6 @@ if __name__ == "__main__":
     argument = sys.argv[1]
     if argument == "pre-process":
         data_processing()
-    elif argument == "trimmed":
-        trimming()
     elif argument == "prediction":
         Prediction_Attention()
     else:
