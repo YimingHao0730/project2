@@ -23,11 +23,9 @@ for filename in tqdm(files, desc="Processing files", unit=" file"):
 
         decompression_cmd = f"gzip -d {os.path.join(fasta_sequence_path, fastq_name)}"
         subprocess.run(decompression_cmd, shell=True)
-        print(f'{current_time()} - Decompression completed for {fastq_name}')
 
         conversion_cmd = f"seqret -sequence {os.path.join(fasta_sequence_path, decompressed_file)} -outseq {os.path.join(fasta_sequence_path, fasta_name)}"
         subprocess.run(conversion_cmd, shell=True)
-        print(f'{current_time()} - Conversion completed for {decompressed_file}')
 
         cmd = (
             f"getorf -sequence {os.path.join(fasta_sequence_path, fasta_name)} "
@@ -36,7 +34,6 @@ for filename in tqdm(files, desc="Processing files", unit=" file"):
         )
 
         subprocess.run(cmd, shell=True)
-        print(f'{current_time()} - Getorf completed for {fasta_name}')
 
 print(f'{current_time()} - getOrf completed')
 
