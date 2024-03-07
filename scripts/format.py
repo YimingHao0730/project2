@@ -1,5 +1,6 @@
 import os
 import time
+from tqdm import tqdm
 
 def translate_sequence(in_file, out_file):
     aacode = {
@@ -11,7 +12,7 @@ def translate_sequence(in_file, out_file):
     }
 
     with open(in_file, 'r') as infile, open(out_file, 'w') as outfile:
-        for line in infile:
+        for line in tqdm(infile, desc="Translating", unit=" line"):
             line = line.strip().upper()
             if line.startswith('>'):
                 continue  # Skip further processing for header lines
@@ -31,6 +32,10 @@ if __name__ == "__main__":
     input_dir = "Data"
     output_dir = "processed_data"
 
+    # Create the output directory if it doesn't exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     # Iterate over every file in the Data directory
     for filename in os.listdir(input_dir):
         if filename.endswith(".fasta"):
@@ -40,3 +45,4 @@ if __name__ == "__main__":
 
     end_time = time.time()  # End time
     print(f"Done. Execution time: {end_time - start_time:.2f} seconds.")
+
