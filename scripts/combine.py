@@ -13,5 +13,5 @@ for i in tqdm(range(0, len(files), 2), desc="Combining files", unit=" pair"):
     r2_file = files[i + 1]
     combined_file = f"{r1_file.split('_R1_')[0]}_{r1_file.split('_R1_')[1]}"
     os.system(f"cat '{os.path.join(directory_path, r1_file)}' '{os.path.join(directory_path, r2_file)}' > /home/y7hao/project2/fasta_sequence_path/'{combined_file}'")
-    print(f"Combined {r1_file} and {r2_file} into {combined_file}")
+
 
