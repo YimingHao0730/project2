@@ -21,6 +21,10 @@ def process_file(filename):
         subprocess.run(conversion_cmd, shell=True)
         print(f'{current_time()} - conversion completed')
 
+        # Delete the original file after seqret
+        os.remove(os.path.join(fasta_sequence_path, decompressed_file))
+        print(f'{current_time()} - original file deleted after seqret')
+
         cmd = (
             f"getorf -sequence {os.path.join(fasta_sequence_path, fasta_name)} "
             f"-find 0 -table 11 -minsize 15 -maxsize 150 "
@@ -29,6 +33,10 @@ def process_file(filename):
 
         subprocess.run(cmd, shell=True)
         print(f'{current_time()} - getorf completed')
+
+        # Delete the fasta file after getorf
+        os.remove(os.path.join(fasta_sequence_path, fasta_name))
+        print(f'{current_time()} - fasta file deleted after getorf')
 
 if __name__ == "__main__":
     print(f'{current_time()} - start getOrf')
@@ -44,5 +52,6 @@ if __name__ == "__main__":
         list(tqdm(pool.imap_unordered(process_file, files), total=len(files), desc="Processing files", unit=" file"))
 
     print(f'{current_time()} - getOrf completed')
+
 
 
