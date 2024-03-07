@@ -15,9 +15,11 @@ def process_file(filename):
 
         decompression_cmd = f"gzip -d {os.path.join(fasta_sequence_path, fastq_name)}"
         subprocess.run(decompression_cmd, shell=True)
+        print(f'{current_time()} - decompression completed')
 
         conversion_cmd = f"seqret -sequence {os.path.join(fasta_sequence_path, decompressed_file)} -outseq {os.path.join(fasta_sequence_path, fasta_name)}"
         subprocess.run(conversion_cmd, shell=True)
+        print(f'{current_time()} - conversion completed')
 
         cmd = (
             f"getorf -sequence {os.path.join(fasta_sequence_path, fasta_name)} "
@@ -26,6 +28,7 @@ def process_file(filename):
         )
 
         subprocess.run(cmd, shell=True)
+        print(f'{current_time()} - getorf completed')
 
 if __name__ == "__main__":
     print(f'{current_time()} - start getOrf')
