@@ -9,6 +9,7 @@ def current_time():
 
 
 def data_processing():
+    os.system('python scripts/combined.py')
     os.system('python scripts/getorf.py')
     os.system('python scripts/format.py')
     print(f"{current_time()} - Data processing done")
