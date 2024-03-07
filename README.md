@@ -65,7 +65,7 @@ To install dependencies, run the following command from the same terminal
 ```bash
 pip install -r requirements.txt
 ```
-(Have to use conda to install cudatoolkit)
+(Have to use conda to install cudatoolkit and cudnn)
 
 ### Building the project stages using `run.py`
 
