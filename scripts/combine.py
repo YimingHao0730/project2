@@ -24,9 +24,10 @@ def combine_files(file_pair):
 
 if __name__ == "__main__":
     # Create a multiprocessing Pool with the number of available CPU cores
-    num_processes = 10
+    num_processes = min(cpu_count(), len(files))
     with Pool(num_processes) as pool:
         # Map the combine_files function to each file pair in parallel
         list(tqdm(pool.imap_unordered(combine_files, zip(files[::2], files[1::2])), total=len(files)//2, desc="Combining files", unit=" pair"))
 
     print("Combining files completed.")
+
