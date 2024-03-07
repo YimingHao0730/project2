@@ -32,15 +32,11 @@ if __name__ == "__main__":
     input_dir = "Data"
     output_dir = "processed_data"
 
-    # Create the output directory if it doesn't exist
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
     # Iterate over every file in the Data directory
     for filename in os.listdir(input_dir):
         if filename.endswith(".fasta"):
             in_file = os.path.join(input_dir, filename)
-            out_file = os.path.join(output_dir, filename)
+            out_file = os.path.join(output_dir, filename.replace(".fasta", ".txt"))
             translate_sequence(in_file, out_file)
 
     end_time = time.time()  # End time

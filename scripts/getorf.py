@@ -2,20 +2,12 @@ import os
 import subprocess
 from datetime import datetime
 from tqdm import tqdm
+from multiprocessing import Pool, cpu_count
 
 def current_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-print(f'{current_time()} - start getOrf')
-
-fasta_sequence_path = "fasta_sequence_path"
-output_dir = "Data"
-
-# Get the list of files in the fasta_sequence_path folder
-files = os.listdir(fasta_sequence_path)
-
-# Iterate over every file in the fasta_sequence_path folder
-for filename in tqdm(files, desc="Processing files", unit=" file"):
+def process_file(filename):
     if filename.endswith(".fastq.gz"):
         fastq_name = filename
         fasta_name = f"{fastq_name.replace('.fastq.gz', '')}.fasta"
@@ -35,5 +27,19 @@ for filename in tqdm(files, desc="Processing files", unit=" file"):
 
         subprocess.run(cmd, shell=True)
 
-print(f'{current_time()} - getOrf completed')
+if __name__ == "__main__":
+    print(f'{current_time()} - start getOrf')
+
+    fasta_sequence_path = "fasta_sequence_path"
+    output_dir = "Data"
+    files = os.listdir(fasta_sequence_path)
+
+    # Create a multiprocessing Pool with the number of available CPU cores
+    num_processes = min(cpu_count(), len(files))
+    with Pool(num_processes) as pool:
+        # Map the processing function to each file in parallel
+        list(tqdm(pool.imap_unordered(process_file, files), total=len(files), desc="Processing files", unit=" file"))
+
+    print(f'{current_time()} - getOrf completed')
+
 
