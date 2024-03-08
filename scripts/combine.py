@@ -6,7 +6,7 @@ from multiprocessing import Pool, cpu_count
 
 # Define the directory path
 directory_path = "/panfs/dtmcdonald/human-depletion-non-tcga/pangenome-adapter-filter-12142-pese/12142/154499/"
-output_directory = "/panfs/y7hao/fasta_sequence_path/"
+output_directory = "/home/y7hao/project2/fasta_sequence_path/"
 
 # Get a list of files in the directory sorted alphabetically
 files = sorted(os.listdir(directory_path))
