@@ -29,12 +29,15 @@ def Prediction_Attention():
             command = f"python scripts/prediction_attention.py {full_path} {output_filename}"
             os.system(command)
             print(f"{current_time()} - end direct prediction {file}")
+            os.remove(full_path)
+            print(f"{current_time()} - removed original file {file}")
         else:
             print(f"{current_time()} - start splitting {file}")
             os.system(f'split -l $((`wc -l < "{full_path}"`/10)) "{full_path}" panfs/y7hao/chunk/output_{base_name}_')
             print(f"{current_time()} - splitting done {file}")
             
-            
+            os.remove(full_path)
+            print(f"{current_time()} - removed original file {file}")
 
             for output_file in glob.glob(f'chunk/output_{base_name}_*'):
                 output_filename = output_file.replace('output', 'processed_data')
@@ -54,7 +57,6 @@ def Prediction_Attention():
         print(f"{current_time()} - result start {file}")
         os.system(f"python scripts/chunk.py panfs/y7hao/Data/{base_name}.fa panfs/y7hao/results/probs_{base_name}.txt panfs/y7hao/results/preds_{base_name}.txt")
         # Deleting intermediate files and the original Data file.
-        os.remove(full_path)  # Delete the original processed_data file
         os.remove(f"panfs/y7hao/Data/{base_name}.fa")  # Delete Data/{file}.fa if needed
         os.remove(f"panfs/y7hao/results/probs_{base_name}.txt")  # Delete intermediate results file
         # Optionally delete results/preds_{base_name}.txt if it's considered intermediate

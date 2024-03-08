@@ -41,7 +41,7 @@ def process_file(filename):
 if __name__ == "__main__":
     print(f'{current_time()} - start getOrf')
 
-    fasta_sequence_path = "/home/project2/y7hao/fasta_sequence_path"
+    fasta_sequence_path = "/home/y7hao/project2/fasta_sequence_path"
     output_dir = "/panfs/y7hao/Data"
     files = os.listdir(fasta_sequence_path)
 

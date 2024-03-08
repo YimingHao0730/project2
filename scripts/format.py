@@ -28,7 +28,6 @@ def translate_sequence(file_tuple):
                 # Write the padded sequence to the outfile
                 outfile.write(b + "\n")
                 
-    os.remove(in_file)  # Delete the original file after processing
 
 if __name__ == "__main__":
     start_time = time.time()  # Start time
