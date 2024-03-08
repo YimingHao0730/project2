@@ -41,8 +41,8 @@ def process_file(filename):
 if __name__ == "__main__":
     print(f'{current_time()} - start getOrf')
 
-    fasta_sequence_path = "fasta_sequence_path"
-    output_dir = "Data"
+    fasta_sequence_path = "/panfs/y7hao/fasta_sequence_path"
+    output_dir = "/panfs/y7hao/Data"
     files = os.listdir(fasta_sequence_path)
 
     # Create a multiprocessing Pool with the number of available CPU cores

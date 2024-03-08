@@ -27,12 +27,14 @@ def translate_sequence(file_tuple):
                 b = "0," * padding_needed + encoded_seq
                 # Write the padded sequence to the outfile
                 outfile.write(b + "\n")
+                
+    os.remove(in_file)  # Delete the original file after processing
 
 if __name__ == "__main__":
     start_time = time.time()  # Start time
 
-    input_dir = "Data"
-    output_dir = "processed_data"
+    input_dir = "panfs/y7hao/Data"
+    output_dir = "panfs/y7hao/processed_data"
 
     files = [(os.path.join(input_dir, filename), os.path.join(output_dir, filename.replace(".fasta", ".txt"))) 
              for filename in os.listdir(input_dir) if filename.endswith(".fasta")]
