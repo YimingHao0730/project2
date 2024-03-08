@@ -32,8 +32,8 @@ def translate_sequence(file_tuple):
 if __name__ == "__main__":
     start_time = time.time()  # Start time
 
-    input_dir = "panfs/y7hao/Data"
-    output_dir = "panfs/y7hao/processed_data"
+    input_dir = "../../../panfs/y7hao/Data"
+    output_dir = "../../../panfs/y7hao/processed_data"
 
     files = [(os.path.join(input_dir, filename), os.path.join(output_dir, filename.replace(".fasta", ".txt"))) 
              for filename in os.listdir(input_dir) if filename.endswith(".fasta")]

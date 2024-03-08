@@ -20,7 +20,7 @@ with open(sequences_file_path, 'r') as sequences_file, open(floats_file_path, 'r
         if not sequence_line or not float_line:  # Break the loop if either file ends
             break
 
-        if float(float_line.strip()) > 0.999999:
+        if float(float_line.strip()) > 0.98:
             output_file.write(sequence_line)  # Write only sequence line
 
 
