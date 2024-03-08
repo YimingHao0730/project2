@@ -49,8 +49,9 @@ conda activate capstone
 To install dependencies, run the following command from the same terminal
 ```bash
 pip install -r requirements.txt
+conda install cudatoolkit==11.2.2
+conda install cudnn==8.8.0
 ```
-(Have to use conda to install cudatoolkit and cudnn)
 
 ### Building the project stages using `run.py`
 
@@ -59,22 +60,31 @@ pip install -r requirements.txt
 * To process the data, from the root directory of the project, run `python run.py pre-process`
   - This script unzips the gz file, converts it to a fasta format, does six-frame-translation and gets the orfs, and get the data into Attention model-ready format.
 
+  - To make sure that you can use multiprocessing to be time efficient, please run the following command:
+  ```bash
+  srun --mem 32g -N 1 -c 32 --time 14:00:00 --pty bash -l
+  ```
+
   - please make sure that you are on `base` environment for pre-processing
 
-* To gain access to gpu, run this command
-```bash
-srun --mem 100g -N 1 -c 1 --partition gpu --gres=gpu:1 --time 5:00:00 --pty bash -l
-```
+* To gain access to gpu, open up a new terminal and login, then run this command
+  ```bash
+  srun --mem 100g -N 1 -c 32 --partition gpu --gres=gpu:1 --time 14:00:00 --pty bash -l
+  ```
 * To do prediction and extract the predicted AMPs, from the project root dir, run `python run.py prediction`
-  - This divides the input file into 10 files(If the file is larger than 500MB), and run them separately through the model, it outputs a file which contains all the sequences that has been predicted AMPs.
+  - This divides the input file into 10 files(If the file is larger than 10GB), and run them separately through the model, it outputs a file which contains all the sequences that has been predicted AMPs.
   
   - Please make sure that you are on `capstone` environment for prediction
 
-*The result will be exported into a txt file in the results folder of the __root directory of the project__
+* The result will be exported into a txt file in the results folder of the __root directory of the project__
 
-* pre-process takes about `?` minutes
+* The processed files are very large (~5TB)
+
+* pre-process takes about `200` minutes
 
 * prediction takes about `?` minutes
+
+* Please notice that all of the finrisk data are protected and you will need certain permission to access, please change the __paths__ in the scripts if you wish to run on your account.
 
 ## Reference
 

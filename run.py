@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 import string
 import glob
+from tqdm import tqdm
 
 # Function to get current time as a string
 def current_time():
@@ -18,7 +19,7 @@ def data_processing():
 # Function to predict using the Attention model
 def Prediction_Attention():
     files = sorted(os.listdir("../../../panfs/y7hao/processed_data/"))
-    for file in files:
+    for file in tqdm(files, desc="Processing files"):  # Wrap files with tqdm for a progress bar
         full_path = os.path.join("../../../panfs/y7hao/processed_data/", file)
         base_name = os.path.splitext(file)[0]
         file_size = os.path.getsize(full_path)
@@ -34,8 +35,8 @@ def Prediction_Attention():
             os.system(f'split -l $((`wc -l < "{full_path}"`/10)) "{full_path}" ../../../panfs/y7hao/chunk/output_{base_name}_')
             print(f"{current_time()} - splitting done {file}")
             
-
-            for output_file in glob.glob(f'../../../panfs/y7hao/chunk/output_{base_name}_*'):
+            output_files = glob.glob(f'../../../panfs/y7hao/chunk/output_{base_name}_*')
+            for output_file in tqdm(output_files, desc="Processing chunks"):  # Wrap output_files with tqdm
                 output_filename = output_file.replace('output', 'processed_data')
                 print(f"{current_time()} - start {output_file}")
                 command = f"python scripts/prediction_attention.py {output_file} {output_filename}"
@@ -45,7 +46,7 @@ def Prediction_Attention():
 
             print(f"{current_time()} - cat start {file}")
             os.system(f"cat ../../../panfs/y7hao/chunk/processed_data_{base_name}_* > ../../../panfs/y7hao/results/probs_{base_name}.txt")
-            for processed_file in glob.glob(f'panfs/y7hao/chunk/processed_data_{base_name}_*'):
+            for processed_file in glob.glob(f'../../../panfs/y7hao/chunk/processed_data_{base_name}_*'):
                 os.remove(processed_file)  # Delete processed_data file after concatenation
             print(f"{current_time()} - cat end {file}")
 
