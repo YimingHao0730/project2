@@ -23,40 +23,27 @@ def Prediction_Attention():
         full_path = os.path.join("../../../panfs/y7hao/processed_data/", file)
         base_name = os.path.splitext(file)[0]
         file_size = os.path.getsize(full_path)
+        
+        if os.path.isfile(f'results/{base_name}.txt'):
+            print(f"{current_time()} - Prediction Already done")
+            continue
 
-        if file_size < 10240 * 1024 * 1024:  # File size less than 500MB
+        elif file_size < 10240 * 1024 * 1024:  # File size less than 500MB
             print(f"{current_time()} - start direct prediction {file}")
             output_filename = f"../../../panfs/y7hao/results/probs_{base_name}.txt"
             command = f"python scripts/prediction_attention.py {full_path} {output_filename}"
             os.system(command)
             print(f"{current_time()} - end direct prediction {file}")
+            # Process results regardless of whether the file was split.
+            print(f"{current_time()} - result start {file}")
+            os.system(f"python scripts/chunk.py ../../../panfs/y7hao/Data/{base_name}.fasta ../../../panfs/y7hao/results/probs_{base_name}.txt results/{base_name}.txt")
+            # Deleting intermediate files and the original Data file.
+            os.remove(f"../../../panfs/y7hao/results/probs_{base_name}.txt")  # Delete intermediate results file
+            # Optionally delete results/preds_{base_name}.txt if it's considered intermediate
+            print(f"{current_time()} - result end {file}")
         else:
-            print(f"{current_time()} - start splitting {file}")
-            os.system(f'split -l $((`wc -l < "{full_path}"`/10)) "{full_path}" ../../../panfs/y7hao/chunk/output_{base_name}_')
-            print(f"{current_time()} - splitting done {file}")
-            
-            output_files = glob.glob(f'../../../panfs/y7hao/chunk/output_{base_name}_*')
-            for output_file in tqdm(output_files, desc="Processing chunks"):  # Wrap output_files with tqdm
-                output_filename = output_file.replace('output', 'processed_data')
-                print(f"{current_time()} - start {output_file}")
-                command = f"python scripts/prediction_attention.py {output_file} {output_filename}"
-                os.system(command)
-                print(f"{current_time()} - end {output_file}")
-                os.remove(output_file)  # Delete output file after prediction
-
-            print(f"{current_time()} - cat start {file}")
-            os.system(f"cat ../../../panfs/y7hao/chunk/processed_data_{base_name}_* > ../../../panfs/y7hao/results/probs_{base_name}.txt")
-            for processed_file in glob.glob(f'../../../panfs/y7hao/chunk/processed_data_{base_name}_*'):
-                os.remove(processed_file)  # Delete processed_data file after concatenation
-            print(f"{current_time()} - cat end {file}")
-
-        # Process results regardless of whether the file was split.
-        print(f"{current_time()} - result start {file}")
-        os.system(f"python scripts/chunk.py ../../../panfs/y7hao/Data/{base_name}.fasta ../../../panfs/y7hao/results/probs_{base_name}.txt results/{base_name}.txt")
-        # Deleting intermediate files and the original Data file.
-        os.remove(f"../../../panfs/y7hao/results/probs_{base_name}.txt")  # Delete intermediate results file
-        # Optionally delete results/preds_{base_name}.txt if it's considered intermediate
-        print(f"{current_time()} - result end {file}")
+            print(f"{current_time()} - File too large")
+            continue
         
 # Main execution point of the script
 if __name__ == "__main__":
