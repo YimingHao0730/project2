@@ -1,10 +1,10 @@
 import pandas as pd
 import os
 from scipy.stats import pearsonr
-from tqdm import tqdm
+from datetime import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
-from datetime import datetime
+import numpy as np
 
 def current_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -13,11 +13,13 @@ def current_time():
 metagenomics = pd.read_csv("../../../projects/capstone/finrisk-metadata/FR02_pheno.txt.gz", sep='\t')
 
 output_directory = 'Final_results'
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
 
 diseases = ['DIAB_T2', 'COPD', 'ASTHMA', 'HDL']
 
 # Select relevant columns
-metadata = metagenomics[['Barcode'] + diseases]
+metadata = metagenomics[['Barcode'] + diseases].dropna()
 
 # Initialize a dictionary to hold AMP sequence counts for each sample
 amp_sequences = {}
@@ -37,94 +39,61 @@ for filename in os.listdir(folder_path):
 # Convert AMP sequences dictionary to DataFrame and fill missing values with 0
 df_amp = pd.DataFrame.from_dict(amp_sequences, orient='index').fillna(0).astype(int)
 
-print(f'{current_time()} - df_amp completed')
-
-
-metadata = metadata.dropna()
-
 metadata = metadata.set_index("Barcode")
-
-metagenomics = metadata.astype(int)
+metadata = metadata.astype(int)
 
 # Merge DataFrames
-df_merged = metagenomics.join(df_amp, how='inner')
-
-empty_col = [col for col in df_merged.columns if df_merged[col].sum() == 0]
-
-df_merged = df_merged.drop(columns=empty_col)
-
-
-
-print(f'{current_time()} - merge completed')
+df_merged = metadata.join(df_amp, how='inner')
+df_merged.drop(columns=[col for col in df_merged.columns if df_merged[col].sum() == 0], inplace=True)
 
 correlations = {disease: {} for disease in diseases}
 
-
 # Iterate over health conditions for correlation analysis
-for condition in tqdm(diseases):
-    for column in tqdm(df_merged.columns[len(diseases):], desc=f'Condition: {condition}'):  
-        correlation, _ = pearsonr(df_merged[column], df_merged[condition])
-        correlations[condition][column] = correlation
-            
+for condition in diseases:
+    for column in df_merged.columns[len(diseases):]:  
+        correlation, p_value = pearsonr(df_merged[column], df_merged[condition])
+        correlations[condition][column] = {'correlation': correlation, 'p_value': p_value}
 
-print(f'{current_time()} - correlation completed')
-            
 # Define the threshold for strong association
-threshold = 0.5  # You can adjust this threshold as needed
+threshold = 0.5  # Adjust this threshold as needed
 
 # Create a dictionary to store sequences with strong association for each condition
 strong_associations = {disease: [] for disease in diseases}
 
 # Iterate through the correlations dictionary
-for condition, correlations_dict in correlations.items():
-    for sequence, correlation in correlations_dict.items():
-        # Check if correlation coefficient is above the threshold
-        if abs(correlation) >= threshold:
-            # Add the sequence to the list of strong associations for the current condition
+for condition, seq_data in correlations.items():
+    for sequence, data in seq_data.items():
+        if abs(data['correlation']) >= threshold:
             strong_associations[condition].append(sequence)
-            
-print(f'{current_time()} - strong associations completed')
 
+# Create a list of dictionaries for DataFrame creation
+data_for_df = []
+for disease, seq_data in correlations.items():
+    for sequence, data in seq_data.items():
+        row = {'Disease': disease, 'Sequence': sequence, 'Correlation': data['correlation'], 'P-Value': data['p_value']}
+        data_for_df.append(row)
 
+# Create DataFrame and set index
+df_correlations = pd.DataFrame(data_for_df)
+df_correlations.set_index(['Disease', 'Sequence'], inplace=True)
 
-# Convert dictionary to DataFrame for easier manipulation and visualization
-df = pd.DataFrame(correlations).T  # Transpose to have diseases as rows and sequences as columns
-
-df.fillna(0, inplace=True)  # Replace NaN with 0s for sequences not present in some diseases
-
-# Since we have a lot of sequences, let's just visualize the data without sequence names
-plt.figure(figsize=(20, 10))  # Adjust the size as needed
-
-# Generate a heatmap without annotations and without sequence names
-sns.heatmap(df, cmap="viridis", xticklabels=False, yticklabels=True)
-plt.title('Correlation between AMP Sequences and Diseases')
-plt.ylabel('Disease')
-plt.xlabel('AMP Sequence Index')  # Indicating these are indices, not actual names
-
-# Save the plot as an image
-plot_path = "Final_results/heatmap_plot.png"  # Specify your desired path
-plt.savefig(plot_path)
-
-print(f'{current_time()} - plt completed')
-
-# Prepare the string to write to the file
-output_text = "Strong Associations:\n"
+# Prepare the string to write to the file including correlation coefficients and p-values
+output_text = "Associations (Correlation and P-Values):\n"
 for disease, sequences in strong_associations.items():
     output_text += f"\n{disease}:\n"
-    if sequences:  # Only if there are associated sequences
-        output_text += "\n".join(sequences)
-    else:
-        output_text += "No strong associations."
-    output_text += "\n"  # Add a newline for formatting
-
-# Path where the text file will be saved
-output_path = 'Final_results/strong_associations.txt'
+    for sequence in sequences:
+        correlation = correlations[disease][sequence]['correlation']
+        p_value = correlations[disease][sequence]['p_value']
+        output_text += f"{sequence}: Correlation = {correlation:.4f}, P-value = {p_value:.4g}\n"
 
 # Write the output string to a text file
+output_path = os.path.join(output_directory, 'strong_associations_with_p_values.txt')
 with open(output_path, 'w') as file:
     file.write(output_text)
-    
-print(f'{current_time()} - txt completed')
+
+# Print completion message
+print(f'{current_time()} - Analysis completed. Results saved to {output_path}')
+
             
 
 
