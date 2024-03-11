@@ -45,6 +45,9 @@ def Prediction_Attention():
             print(f"{current_time()} - File too large")
             continue
         
+def final_result():
+    os.system('python scripts/metadata.py')
+        
 # Main execution point of the script
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -56,7 +59,9 @@ if __name__ == "__main__":
         data_processing()
     elif argument == "prediction":
         Prediction_Attention()
+    elif argument == "result":
+        final_result()
     else:
-        print(f"{current_time()} - Invalid argument. Please choose 'pre-process' or 'prediction'.")
+        print(f"{current_time()} - Invalid argument. Please choose 'pre-process' or 'prediction' or 'result'")
 
 
