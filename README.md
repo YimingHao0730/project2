@@ -1,3 +1,20 @@
+# Utilizing Deep Learning to Uncover Antimicrobial Peptides and Investigating their Associations with Diverse Diseases
+As pathogens start to become more resistant to our current antibiotics, we
+will soon need new antibiotics to fight various forms of bacteria. By 2050,
+drug-resistant pathogens are expected to be the leading cause of death in the
+world (O’Neill 2016). One way to create new antibiotics is to identify pep-
+tides, sequences of amino acids, that have antimicrobial properties. These are
+commonly known as antimicrobial peptides(AMP). These AMPs are known to
+regulate inflammation, kill certain types of cancer cells, and fight various in-
+fections and diseases. In this project, we use an Attention model to classify
+peptides as AMPs or non-AMPs. We then run this model on a dataset called
+FINRISK, which contains both DNA and health data on a randomly selected
+group of Finnish people. Using the output of our model and the health data
+in FINRISK, we performed a Pearson correlation test between having a spe-
+cific AMP and having a disease listed in the FINRISK health data. We found
+an average Pearson correlation coefficient of 0.5456 between having 4 pep-
+tides and having COPD. We will be testing these peptides in the wet lab in
+the coming weeks.
 
 # Barnacle2 Workflow
 
@@ -82,9 +99,12 @@ conda install cudnn==8.8.0
 
 * pre-process takes about `200` minutes
 
-* prediction takes about `?` minutes
+* prediction takes about `180` minutes
 
 * Please notice that all of the finrisk data are protected and you will need certain permission to access, please change the __paths__ in the scripts if you wish to run on your account.
+
+* To run correlation analysis and export the final results, run `python run.py result`, this is export the results in the folder __Final_results__
+
 
 ## Reference
 
